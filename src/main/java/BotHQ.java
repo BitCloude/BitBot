@@ -19,7 +19,7 @@ private HashMap<String,String> propsEnv;
 private HashMap<String,String> propsQuery;
 static boolean stillRunning = true;
 //static ExecutorService botMinions = Executors.newCachedThreadPool();
-static ExecutorService minionRunners = Executors.newFixedThreadPool(6);
+static ExecutorService minionRunners = Executors.newFixedThreadPool(2);
 static ExecutorService commentCollector = Executors.newSingleThreadExecutor();
 
 private BotHQ(){
@@ -43,14 +43,15 @@ public int getTestAmount() {
 
 public static void main(String[] args) {
 
-
+    Boolean isUpVote = true;
+    String user = "TheRealDongLover";
     BotHQ botHQ = new BotHQ();
     Logger actionDetailLogger = LoggerFactory.getLogger(actionDetailLoggerName);
     botHQ.setSystemProperties();
     Boolean reachedEndOfComments = false;
 
     LinkedBlockingDeque<String> comment_links = new LinkedBlockingDeque<>();
-    UserCommentCollector comCollector = new UserCommentCollector( actionDetailLogger, "TheRealDongLover");
+    UserCommentCollector comCollector = new UserCommentCollector( actionDetailLogger, user);
 
     Future<ArrayList<String>>  commentCollector_future = null;
     List<Future<Integer>>  botRunner_futures = new ArrayList<>();
@@ -58,7 +59,7 @@ public static void main(String[] args) {
 
     //comCollector.collectUserCommentUrls().forEach(comment_links::addLast);
 
-    while(reachedEndOfComments && comment_links.isEmpty()) {
+    while(!(reachedEndOfComments && comment_links.isEmpty())) {
 
         if (commentCollector_future == null && !reachedEndOfComments) {
             commentCollector_future = commentCollector.submit(() -> {
@@ -67,7 +68,7 @@ public static void main(String[] args) {
             });
         }
 
-        if (commentCollector_future.isDone()) {
+        if (commentCollector_future != null && commentCollector_future.isDone()) {
             try {
                 if (commentCollector_future.get() != null)
                     commentCollector_future.get().forEach(comment_links::addLast);
@@ -84,11 +85,10 @@ public static void main(String[] args) {
         if (comment_links.peekFirst() != null) {
             botRunner_futures.add(minionRunners.submit(() -> {
                 actionDetailLogger.info("Warning! botRunner Activating");
-                new BrowserTask(actionDetailLogger).runBrowserTask(comment_links.pollFirst());
+                new BrowserTask(actionDetailLogger).runBrowserTask(comment_links.pollFirst(),isUpVote, user);
                 return null;
             }));
         }
-
 
     }
 
@@ -100,10 +100,10 @@ public static void main(String[] args) {
         });
     }
 
+    commentCollector.shutdown();
+    minionRunners.shutdown();
 
 }
-
-
 
 }
 

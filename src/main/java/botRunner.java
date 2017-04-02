@@ -15,6 +15,7 @@ import java.util.concurrent.Future;
 /**
  * Created by AyvAndr on 4/1/2017.
  */
+/*
 public class botRunner implements Loggable{
 
     private String userDataLoggerName;
@@ -98,7 +99,7 @@ public class botRunner implements Loggable{
             }
                 /* MORE CODE FOR SECOND QUERY IF NEEDED*/
 
-    }
+   // }
 
 
-}
+//}

@@ -26,12 +26,12 @@ environments{
     }
 }
 
-quitCachedDriverOnShutdown = false
+quitCachedDriverOnShutdown = true
 cacheDriverPerThread = true
 //cacheDriver = true
 baseNavigatorWaiting = true
 atCheckWaiting = true
-autoClearCookies = true
+autoClearCookies = false
 
 def envPath = System.getProperty("ccsspTestPath");
 

@@ -1,4 +1,4 @@
-import Pages.PostLoginGenericPage
+import Pages.CommentThreadPage
 import geb.Browser
 import org.slf4j.Logger
 
@@ -13,54 +13,33 @@ class BrowserTask {
         slf4jLogger = actionDetailLogger;
     }
 
-    boolean runBrowserTask(userData) {
-        boolean isSuccessful = false
-        userData[6] = ""
+    void runBrowserTask(String url, boolean isUpVote, String user) {
+
         Browser.drive() {
             try{
-                via AuthenticationPage
-                for(int i = 0; i < 5; i++){
-                    if(isAt(UnavailablePage))
-                        via AuthenticationPage
-                    else break
+                page(CommentThreadPage)
+                setUrl(url)
+                to CommentThreadPage
+
+                if(!isCorrectUser(user)){
+                    return
                 }
-                 isAt AuthenticationPage
-                login(userData)
-
-                isAt PostLoginGenericPage
-                //slf4jLogger.debug("Login Successful")
-
-                if(getCurrentUrl().endsWith(((String) StatusSummaryPage.url))) {
-                        isAt StatusSummaryPage
-                    clickOnApplication(userData[5])
+                if(isUpVote) {
+                    upvote()
+                    System.out.println("UPVOTING" + url)
                 }
-                if(isAt(PostLoginGenericPage)){
-                    if((title.indexOf("We're Sorry") == -1 && title.indexOf("Timed Out")== -1 && title.indexOf("Temporarily Unavailable")==-1 && !(getCurrentUrl().endsWith(((String) StatusSummaryPage.url))))){
-                        isSuccessful = true;
-
-                        if(getUploadStips()){
-                            userData[6] += "| Upload |";
-                        }
-                        if(getReviewStips()){
-                            userData[6] += "| Review |";
-                        }
-                        if(getReviewAndSignStips()){
-                            userData[6] += "| Review And Sign |";
-                        }
-
-                    }
+                else{
+                    downvote()
+                    System.out.println("DOWNVOTING" + url)
                 }
+
             }catch (Exception e){
                 slf4jLogger.error("Exception was thrown", e);
-            }
-            finally {
-                return isSuccessful;
             }
 
 
         }
 
-        return isSuccessful;
 
     }
 
