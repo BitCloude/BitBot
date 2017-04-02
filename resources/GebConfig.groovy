@@ -1,9 +1,8 @@
 import org.openqa.selenium.chrome.ChromeDriver
-import geb.Browser
 
 waiting {
 
-    timeout = 30
+    timeout = 10
     retryInterval = 0.5
 
     presets {
@@ -28,8 +27,8 @@ environments{
 }
 
 quitCachedDriverOnShutdown = false
-//cacheDriverPerThread = true
-cacheDriver = true
+cacheDriverPerThread = true
+//cacheDriver = true
 baseNavigatorWaiting = true
 atCheckWaiting = true
 autoClearCookies = true

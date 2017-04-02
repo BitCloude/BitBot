@@ -1,3 +1,6 @@
+package Pages
+
+import Modules.FooterModule
 import geb.Page
 
 /**

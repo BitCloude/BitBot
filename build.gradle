@@ -28,7 +28,7 @@ dependencies {
 sourceSets{
     main{
         groovy{
-            srcDirs 'src','res'
+            srcDirs 'src','resources'
         }
     }
 }
