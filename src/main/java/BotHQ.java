@@ -19,7 +19,7 @@ private HashMap<String,String> propsEnv;
 private HashMap<String,String> propsQuery;
 static boolean stillRunning = true;
 //static ExecutorService botMinions = Executors.newCachedThreadPool();
-static ExecutorService minionRunners = Executors.newFixedThreadPool(2);
+static ExecutorService minionRunners = Executors.newFixedThreadPool(3);
 static ExecutorService commentCollector = Executors.newSingleThreadExecutor();
 
 private BotHQ(){
@@ -44,8 +44,9 @@ public int getTestAmount() {
 public static void main(String[] args) {
 
     Boolean isUpVote = true;
-    String user = "TheRealDongLover";
+    String user = "Syngaren";
     BotHQ botHQ = new BotHQ();
+    botHQ.activateLoggers();
     Logger actionDetailLogger = LoggerFactory.getLogger(actionDetailLoggerName);
     botHQ.setSystemProperties();
     Boolean reachedEndOfComments = false;
@@ -83,11 +84,18 @@ public static void main(String[] args) {
 
 
         if (comment_links.peekFirst() != null) {
+            String commentLink = comment_links.pollFirst();
             botRunner_futures.add(minionRunners.submit(() -> {
                 actionDetailLogger.info("Warning! botRunner Activating");
-                new BrowserTask(actionDetailLogger).runBrowserTask(comment_links.pollFirst(),isUpVote, user);
+                new BrowserTask(actionDetailLogger).runBrowserTask(commentLink,isUpVote, user);
                 return null;
             }));
+        }
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            actionDetailLogger.error(e.getMessage());
         }
 
     }
@@ -98,6 +106,12 @@ public static void main(String[] args) {
             if (!future.isDone())
                 stillRunning = true;
         });
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            actionDetailLogger.error(e.getMessage());
+        }
     }
 
     commentCollector.shutdown();

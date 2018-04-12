@@ -33,7 +33,9 @@ class UserCommentCollector {
                 slf4jLogger.error("Exception was thrown", e);
             }
         }
-
+        if (commentUrls.isEmpty()) {
+            return null
+        }
         return commentUrls
 
     }

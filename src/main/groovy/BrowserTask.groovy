@@ -19,6 +19,7 @@ class BrowserTask {
             try{
                 page(CommentThreadPage)
                 setUrl(url)
+                setUser(user)
                 to CommentThreadPage
 
                 if(!isCorrectUser(user)){
@@ -26,11 +27,11 @@ class BrowserTask {
                 }
                 if(isUpVote) {
                     upvote()
-                    System.out.println("UPVOTING" + url)
+                    System.out.println("UPVOTING " + url)
                 }
                 else{
                     downvote()
-                    System.out.println("DOWNVOTING" + url)
+                    System.out.println("DOWNVOTING " + url)
                 }
 
             }catch (Exception e){

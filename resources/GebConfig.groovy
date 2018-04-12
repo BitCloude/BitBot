@@ -1,4 +1,6 @@
 import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.remote.DesiredCapabilities
+import org.openqa.selenium.chrome.ChromeOptions
 
 waiting {
 
@@ -14,14 +16,34 @@ waiting {
 }
 
 
-driver = {System.setProperty("webdriver.chrome.driver", ".\\resources\\drivers\\chromedriver.exe")
-     new ChromeDriver()}
+driver = {
+    System.setProperty("webdriver.chrome.driver", ".\\resources\\drivers\\chromedriver.exe")
+
+    path_to_extension = "D:\\Users\\AyvAndr\\IdeaProjects\\BitBotGod\\resources\\extensions\\2.8.6_0"
+    ChromeOptions options = new ChromeOptions();
+   // options.addArguments('load-extension=' + path_to_extension)
+
+    DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+    capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+    capabilities.setCapability("pageLoadStrategy", "none");
+
+    driver = new ChromeDriver(capabilities)
+}
 
 environments{
     chrome{
         driver = {
             System.setProperty("webdriver.chrome.driver", ".\\resources\\drivers\\chromedriver.exe")
-            driver = new ChromeDriver()
+
+            path_to_extension = "D:\\Users\\AyvAndr\\IdeaProjects\\BitBotGod\\resources\\extensions\\2.8.6_0"
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments('load-extension=' + path_to_extension)
+
+            DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+            capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+            capabilities.setCapability("pageLoadStrategy", "none");
+
+            driver = new ChromeDriver(capabilities)
         }
     }
 }
